@@ -7,3 +7,6 @@ TL;DR: `./main.sh`.
 This automates a secure access pattern.
 
 This authenticates and then uses GitHub secrets to write out a cloudinit file.
+
+gh run
+gh workflow (disable / enable / list / view / run)
