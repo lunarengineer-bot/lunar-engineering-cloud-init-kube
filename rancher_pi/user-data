@@ -1,0 +1,36 @@
+#cloud-config
+# vim: syntax=yaml
+#
+growpart: { mode: "off" }
+locale: en_US.UTF-8
+resize_rootfs: false
+ssh_pwauth: false
+system_info:
+  default_user:
+    name: terraform
+users:
+  - default
+  - name: terraform
+    gecos: Terrafom User
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, adm, docker, sudo
+    lock_passwd: true
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAA...== terraformuser
+
+# expand the root partition up to a certain location on the disk
+# note that the value is the marker on the disk where the root partion will end
+# and can be in MB, GB or % of overall disk (see parted units)
+# note that the root partition is where container images are stored
+#
+# create an additional partition and mark where on the disk it starts and stops
+# this can be used later for a cluster filesystem
+runcmd:
+  - [partprobe]
+  - 'echo "Yes\n16000MB" | sudo parted /dev/mmcblk0 ---pretend-input-tty resizepart 2'
+  - [resize2fs, /dev/mmcblk0p2]
+  - [partprobe]
+  - [parted, /dev/mmcblk0, mkpart, primary, xfs, 16001MB, 100%]
+  - [mkfs.xfs, -f, /dev/mmcblk0p3]
+  - [partprobe]
