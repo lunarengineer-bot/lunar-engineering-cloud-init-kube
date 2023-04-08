@@ -5,19 +5,22 @@ growpart: { mode: "off" }
 locale: en_US.UTF-8
 resize_rootfs: false
 ssh_pwauth: false
+hostname: rancherpi
 system_info:
   default_user:
-    name: terraform
+    name: lunarengineerbot
+packages:
+  - ntp
 users:
   - default
-  - name: terraform
-    gecos: Terrafom User
+  - name: lunarengineerbot
+    gecos: Lunar Engineering Bot
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, adm, docker, sudo
     lock_passwd: true
     shell: /bin/bash
     ssh_authorized_keys:
-      - ssh-rsa AAAA...== terraformuser
+      - <USER_KEY>
 
 # expand the root partition up to a certain location on the disk
 # note that the value is the marker on the disk where the root partion will end
@@ -34,3 +37,11 @@ runcmd:
   - [parted, /dev/mmcblk0, mkpart, primary, xfs, 16001MB, 100%]
   - [mkfs.xfs, -f, /dev/mmcblk0p3]
   - [partprobe]
+  # Turn off the firewall.
+  - [ufw, disable]
+  # Get Docker.
+  - curl -fsSL https://get.docker.com | sh
+  # Get K3s
+  - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.26.3+k3s1" sh -s - server --cluster-init
+  # Allow reading the k3s yaml
+  - chmod +r /etc/rancher/k3s/k3s.yaml
