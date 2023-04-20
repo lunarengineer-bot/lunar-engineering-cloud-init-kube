@@ -5,16 +5,14 @@ growpart: { mode: "off" }
 locale: en_US.UTF-8
 resize_rootfs: false
 ssh_pwauth: false
-hostname: rancherpi
 system_info:
   default_user:
-    name: lunarengineerbot
+    name: {{ cookiecutter.ssh_username }}
 packages:
   - ntp
 users:
   - default
-  - name: lunarengineerbot
-    gecos: Lunar Engineering Bot
+  - name:  {{ cookiecutter.ssh_username }}
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, adm, docker, sudo
     lock_passwd: true
@@ -30,18 +28,11 @@ users:
 # create an additional partition and mark where on the disk it starts and stops
 # this can be used later for a cluster filesystem
 runcmd:
-  - [partprobe]
-  - 'echo "Yes\n16000MB" | sudo parted /dev/mmcblk0 ---pretend-input-tty resizepart 2'
-  - [resize2fs, /dev/mmcblk0p2]
-  - [partprobe]
-  - [parted, /dev/mmcblk0, mkpart, primary, xfs, 16001MB, 100%]
-  - [mkfs.xfs, -f, /dev/mmcblk0p3]
-  - [partprobe]
   # Turn off the firewall.
   - [ufw, disable]
   # Get Docker.
   - curl -fsSL https://get.docker.com | sh
   # Get K3s
-  - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.26.3+k3s1" sh -s - server --cluster-init
+  - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ cookiecutter.k3s_version }}"" sh -s - server --cluster-init
   # Allow reading the k3s yaml
   - chmod +r /etc/rancher/k3s/k3s.yaml
