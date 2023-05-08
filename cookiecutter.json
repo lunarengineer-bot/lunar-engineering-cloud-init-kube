@@ -1,9 +1,13 @@
 {
     "project_slug": "cloud-init-files",
+    "organization_name": "Lunar Engineering",
     "ssh_cipher": "ed25519",
     "ssh_rounds": "100",
     "ssh_passphrase": "",
     "ssh_username": "lunarengineer-bot",
     "ssh_keypair_filepath": "~/.ssh/{{cookiecutter.ssh_username}}",
+    "proxmox_api_url": "",
+    "proxmox_api_token_id": "",
+    "proxmox_api_token_secret": "",
     "k3s_version": "v1.26.3+k3s1"
 }
