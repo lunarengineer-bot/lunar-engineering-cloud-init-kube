@@ -1,17 +1,20 @@
 # [Automate A Secure Cloud Init Enabled Kubernetes Cluster](https://github.com/lunarengineer-bot/lunar-engineering-cloud-init-kube)
 
-This is designed to create a cloud-init image (using Cookiecutter) to assist automating the process of adding kubernetes nodes to a compute cluster.
+This project is designed to 'easy-button' a custom proxmox k3s cluster.
 
-## How do I use this?
+It does this in two phases; the first phase deploys a project customized to your environment and your hardware into your local environment, initializing a git repository at the same time.
 
-This uses a project called CookieCutter to either interactively (or not) build templated files which go through the process of creating cloud init user data files and *also* don't leak secrets accidentally.
+* Phase 1: Using CookieCutter this creates a local project customized to your needs, including a cloud-init image (using Cookiecutter) and coupled Terraform recipe to assist automating the process of adding kubernetes nodes to a compute cluster.
 
-You need python and cookiecutter.
+* Phase 2: Using Terraform this connects to a proxmox cluster and adds nodes to the cluster. This recipe is customized when you run cookiecutter; in general you will need at least three control nodes for a high availability cluster.
+
+
+All you need to start is python and cookiecutter; if you've got python you can pip install cookiecutter.
 
 There are two ways to use this:
 
 1. Interactively: `cookiecutter git@github.com:lunarengineer-bot/lunar-engineering-cloud-init-kube.git` will ask you nicely what you'd like and where you want to put it.
-2. '[Sudo make me a sandwich](https://xkcd.com/149/)': `cookiecutter git@github.com:lunarengineer-bot/lunar-engineering-cloud-init-kube.git --no-input` will just create a 'cloud-init-files' folder with a cloud init user-data.yml in it.
+2. '[Sudo make me a sandwich](https://xkcd.com/149/)': `cookiecutter git@github.com:lunarengineer-bot/lunar-engineering-cloud-init-kube.git --no-input` will just create a project for you.
 
 ## Development
 
@@ -33,6 +36,6 @@ The tests folder demonstrates a method of spinning up a vm using lxc and attachi
 
 You may interact with that test container to do things like:
 1. Use `lxc console test-container` to drop into a shell within test-container.
-2. Attempt to log in with a *password enabled user*. That's not included and must be added (example below.)
+2. Attempt to log in with a *password enabled user*. That's not included and must be added.
 
 You may implement whatever testing you desire for your processes past this point.
