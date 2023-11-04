@@ -15,6 +15,6 @@ write_key(ssh_keypair_filepath)
 #   the key is not valid.
 
 # TODO: Add a check to see if the key is valid.
-def test_ssh_login():
-    """Connect to the server with the keypair."""
-    # This line uses python
+# def test_ssh_login():
+#     """Connect to the server with the keypair."""
+#     # This line uses python

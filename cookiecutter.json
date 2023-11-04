@@ -9,5 +9,8 @@
     "proxmox_api_url": "",
     "proxmox_api_token_id": "",
     "proxmox_api_token_secret": "",
-    "k3s_version": "v1.26.3+k3s1"
+    "proxmox_nodes": "",
+    "k3s_version": "v1.26.3+k3s1",
+    "num_control_nodes": "3",
+    "num_worker_nodes": "1"
 }

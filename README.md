@@ -6,7 +6,7 @@ It does this in two phases; the first phase deploys a project customized to your
 
 * Phase 1: Using CookieCutter this creates a local project customized to your needs, including a cloud-init image (using Cookiecutter) and coupled Terraform recipe to assist automating the process of adding kubernetes nodes to a compute cluster.
 
-* Phase 2: Using Terraform this connects to the proxmox cluster and adds the nodes to the cluster.
+* Phase 2: Using Terraform this connects to a proxmox cluster and adds nodes to the cluster. This recipe is customized when you run cookiecutter; in general you will need at least three control nodes for a high availability cluster.
 
 
 All you need to start is python and cookiecutter; if you've got python you can pip install cookiecutter.

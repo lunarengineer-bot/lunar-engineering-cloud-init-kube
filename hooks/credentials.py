@@ -95,7 +95,7 @@ class SSHClient():
             recursive=False,
             **run_kwargs) -> subprocess.CompletedProcess:
         
-        """Copies `srouce` file to remote `destination` using the 
+        """Copies `source` file to remote `destination` using the 
             native `scp` command.
             
         Args:
