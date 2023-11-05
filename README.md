@@ -1,38 +1,77 @@
-# [Automate A Secure Cloud Init Enabled Kubernetes Cluster](https://github.com/lunarengineer-bot/lunar-engineering-cloud-init-kube)
+# [Automate Cloud Init Config Generation](https://github.com/lunarengineer-bot/lunar-engineering-cloud-init-kube)
 
-This is designed to create a cloud-init image (using Cookiecutter) to assist automating the process of adding kubernetes nodes to a compute cluster.
+This is designed to be plugged into a larger Terraform structure. As such, it's simply built with an expectation in mind that it has a src directory which exposes a terraform project.
+
+The details beyond that I just don't care about.
 
 ## How do I use this?
 
-This uses a project called CookieCutter to either interactively (or not) build templated files which go through the process of creating cloud init user data files and *also* don't leak secrets accidentally.
+You've got your project set up, you clone this puppy down into it somewhere, and then you call it as a Terraform module with some inputs (see vars.tf at the root level.)
 
-You need python and cookiecutter.
-
-There are two ways to use this:
-
-1. Interactively: `cookiecutter git@github.com:lunarengineer-bot/lunar-engineering-cloud-init-kube.git` will ask you nicely what you'd like and where you want to put it.
-2. '[Sudo make me a sandwich](https://xkcd.com/149/)': `cookiecutter git@github.com:lunarengineer-bot/lunar-engineering-cloud-init-kube.git --no-input` will just create a 'cloud-init-files' folder with a cloud init user-data.yml in it.
+When you call it you're going to feed it a simplified input representation (fun enhancement: and potentially an organizational mapping document) which builds a set of files for reuse.
 
 ## Development
 
-If you clone this project down you can open it in a devcontainer (easy to do using VSCode.)
+What does this do? Well, when you give it a simplified set of inputs it's going to generate cloud init configurations according to your specifications.
 
-Now, run `cookicutter . --no-input`. Modify the template and the cookiecutter.json as appropriate to achieve desired behavior.
+What does that look like?
 
-Tests will come if I ever care enough to be arsed.
+It looks like an input variable which is arbitrarily descriptive that results in a dataset from which I can obtain a set of nodes and their communications structure; given that a node has communication capability established this recipe deploys a templated cloud init file which is dependent on the chunks.
+THis is intended to be used in preprovision and, as such, it is called upon a set of bare resources.
+
+So, how do I arbitrarily describe group structure in just a few inputs?
+
+DNS resolution!
+
+### Terraform Patterns
+
+%{ for addr in ip_addrs ~}
+backend ${addr}:${port}
+%{ endfor ~}
+
+> templatefile("${path.module}/backends.tftpl", { port = 8080, ip_addrs = ["10.0.0.1", "10.0.0.2"] })
+backend 10.0.0.1:8080
+backend 10.0.0.2:8080
+
+%{ for config_key, config_value in config }
+set ${config_key} = ${config_value}
+%{ endfor ~}
+
+> templatefile(
+               "${path.module}/config.tftpl",
+               {
+                 config = {
+                   "x"   = "y"
+                   "foo" = "bar"
+                   "key" = "value"
+                 }
+               }
+              )
 
 ### Testing Environment
 
-If you are modifying the cloud-init user configuration you'll probably want an environment to test it in.
+If you are modifying a cloud-init user configuration you'll probably want an environment to test it in.
 
-I could not find an easy way to test cloud-init within a container. Ultimately, I got fed up and just booted up a VM; it's not as friendly with my workflows (VSCode and Github friendly) but it supports using *lxd*.
+The tests folder shows a recipe for testing.
 
-LXD makes vms easy. Like, seriously easy.
 
-The tests folder demonstrates a method of spinning up a vm using lxc and attaching the user data to test cloud init.
-
-You may interact with that test container to do things like:
-1. Use `lxc console test-container` to drop into a shell within test-container.
-2. Attempt to log in with a *password enabled user*. That's not included and must be added (example below.)
-
-You may implement whatever testing you desire for your processes past this point.
+Potential additional interesting sections:
+* [ansible](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ansible): Can run a playbook after deployment.
+* [certs](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ca-certificates): Deploy certs.
+* [disk setup](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#disk-setup): Disk partitioning.
+* [hotplug](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#install-hotplug): Udev hotplugging.
+* [keyboard](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#keyboard)
+* [locale](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#locale): Set system locale.
+* [mounts](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#mounts): Mount things.
+* [ntp](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ntp): Potentially necessary.
+* [update packages](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install): Self explanatory.
+* [phone home](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#phone-home): POST to url.
+* [scripts per...](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#scripts-per-boot): Scripts to run on boot, once, and create.
+* [set hostname](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#set-hostname): Yep.
+* [snap](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#snap): microk8s
+* [ssh](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh): SSH...
+* [ssh import id](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#ssh-import-id): can make life simple
+* [update hosts](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#update-etc-hosts)
+* [users and groups](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#users-and-groups)
+* [wireguard](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#wireguard): VPN!
+* [write files](https://cloudinit.readthedocs.io/en/latest/reference/modules.html#write-files): write files on boot.

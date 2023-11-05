@@ -1,0 +1,11 @@
+#cloud-config
+# vim: syntax=yaml
+#
+growpart: { mode: "off" }
+locale: en_US.UTF-8
+resize_rootfs: false
+ssh_pwauth: false
+system_info:
+  default_user:
+    name: ${var.username}
+

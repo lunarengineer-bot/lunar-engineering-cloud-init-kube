@@ -1,9 +1,0 @@
-{
-    "project_slug": "cloud-init-files",
-    "ssh_cipher": "ed25519",
-    "ssh_rounds": "100",
-    "ssh_passphrase": "",
-    "ssh_username": "lunarengineer-bot",
-    "ssh_keypair_filepath": "~/.ssh/{{cookiecutter.ssh_username}}",
-    "k3s_version": "v1.26.3+k3s1"
-}

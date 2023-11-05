@@ -1,0 +1,23 @@
+[
+    {
+        "name": "test_case_one",
+        "input": {"users": [{"username": "tim"}]},
+        "expectations": [
+            "There should be a cloud-init file which can be used.",
+            "There should be a single user; tim.",
+            "tim should have default ssh keys provided."
+        ]
+    },
+    {
+        "name": "test_case_two",
+        "input": {"users": [
+            {"username": "tim"},
+            {"username": "jordan"}
+        ]},
+        "expectations": [
+            "There should be a cloud-init file which can be used.",
+            "There should be two users; tim and jordan.",
+            "There should be default ssh keys provided."
+        ]
+    }
+]
