@@ -1,0 +1,5 @@
+# packages.tftpl
+packages:
+%{ for package in packages ~}
+  - ${package}
+%{ endfor ~}

@@ -19,5 +19,18 @@
             "There should be two users; tim and jordan.",
             "There should be default ssh keys provided."
         ]
+    },
+    {
+        "name": "test_case_two",
+        "input": {"users": [
+            {"username": "tim"},
+            {"username": "jordan"}
+        ], "groups": "stuff"},
+        "expectations": [
+            "There should be a cloud-init file which can be used.",
+            "There should be two users; tim and jordan.",
+            "These users should be in a group.",
+            "There should be default ssh keys provided."
+        ]
     }
 ]

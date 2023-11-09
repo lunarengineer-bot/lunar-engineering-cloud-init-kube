@@ -19,8 +19,8 @@ variable "users" {
     ssh_public_key = string
   }))
   default = [{
-    username = "tim",
-    sudo     = true,
+    username       = "tim",
+    sudo           = true,
     ssh_public_key = "Whatever"
   }]
 }

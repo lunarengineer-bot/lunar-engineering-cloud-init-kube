@@ -10,7 +10,8 @@
 # This runs required tests.
 # 1. Run setup
 # 2. Run tests *MANUALLY*
-lxc list test-container # Get IP
+lxc list test-container -c 4 # Get IPV4
+# ssh whomever@ipv4
 lxc exec test-container -- bash -c "cat /var/log/cloud-init.log"
 lxc exec test-container -- bash -c "cat /root/.ssh/authorized_keys"
 # 3. Run teardown
