@@ -1,4 +1,6 @@
 keys
 cloud-init-files
 stupidfile
-src/.terraform.lock.hcl
+src/.terraform*
+src/terraform.tfstate
+src/terraform.tfstate.backup
