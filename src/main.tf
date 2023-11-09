@@ -39,25 +39,20 @@ locals {
     organization_name = var.organization_name
     users             = var.users
     groups            = jsonencode(local.groupnames)
+    packages          = var.packages
   }) }
 }
 
-
+# This jams all the built templates together.
 data "template_file" "cloud_init" {
   template = replace(join("\n", values(local.templates)), "EOT\n", "")
 }
 
-output "stupid" {
+# This lets me get at the output cloud init file.
+output "cloudinitfile" {
   value = data.template_file.cloud_init.rendered
 }
 
-
-
-
-# variable "packages" {
-#     type = list(string)
-#     default = [ "ntp" , "qemu-guest-agent"]
-# }
 
 # locals {
 #     user_data_files = {

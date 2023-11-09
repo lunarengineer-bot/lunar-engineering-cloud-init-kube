@@ -33,3 +33,8 @@ variable "groups" {
   }))
   default = null
 }
+
+variable "packages" {
+  type    = list(string)
+  default = ["ntp", "qemu-guest-agent"]
+}

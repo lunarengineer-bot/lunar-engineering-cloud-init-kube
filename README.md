@@ -6,7 +6,7 @@ The details beyond that I just don't care about.
 
 ## How do I use this?
 
-You've got your project set up, you clone this puppy down into it somewhere, and then you call it as a Terraform module with some inputs (see vars.tf at the root level.)
+You call it as a Terraform module with some inputs (see vars.tf at the root level.)
 
 When you call it you're going to feed it a simplified input representation (fun enhancement: and potentially an organizational mapping document) which builds a set of files for reuse.
 
@@ -70,9 +70,7 @@ A single Cloud Init template is generated per host.
 
 Each potential section is independently tested and constructed, in order.
 
-If an input variable is passed, you get one thing. If it's not, you get another.
-
-* Usergroups: This section creates a default user and all passed users, in addition to creating any groups that were input beyond the default.
+* Usergroups: This section creates a default user and all passed users, in addition to creating any groups that were input beyond the default. This is super opinionated and wants an ssh key. You should give it what it wants.
 
 ## Testing
 
