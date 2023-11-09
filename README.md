@@ -10,6 +10,22 @@ You've got your project set up, you clone this puppy down into it somewhere, and
 
 When you call it you're going to feed it a simplified input representation (fun enhancement: and potentially an organizational mapping document) which builds a set of files for reuse.
 
+## Software
+
+Open Tofu!
+
+```sh
+wget https://github.com/opentofu/opentofu/releases/download/v1.6.0-alpha2/tofu_1.6.0-alpha2_darwin_arm64.zip
+unzip tofu_1.6.0-alpha2_darwin_arm64.zip
+mv tofu /usr/local/bin/tofu
+```
+
+Or
+
+```sh
+snap install opentofu
+```
+
 ## Development
 
 What does this do? Well, when you give it a simplified set of inputs it's going to generate cloud init configurations according to your specifications.
@@ -17,11 +33,52 @@ What does this do? Well, when you give it a simplified set of inputs it's going 
 What does that look like?
 
 It looks like an input variable which is arbitrarily descriptive that results in a dataset from which I can obtain a set of nodes and their communications structure; given that a node has communication capability established this recipe deploys a templated cloud init file which is dependent on the chunks.
-THis is intended to be used in preprovision and, as such, it is called upon a set of bare resources.
+This is intended to be used in preprovision and, as such, it is called upon a set of bare resources.
+
+It *targets* those resources and makes very simplifying assumptions to limit the complexity.
 
 So, how do I arbitrarily describe group structure in just a few inputs?
 
-DNS resolution!
+## DNS resolution!
+
+Each unique node representing a compute element (compute node) is now referenced by a DNS resolvable host.
+
+### TODO Downstream
+
+The DNS values are resolved and the hosts identified.
+
+### CARRYON
+
+This allows us to build an output dataset containing a bunch of potential information off the bat.
+
+Each node is referenced / identified by metadata, including:
+
+* DNS_HOST (potentially dynamic)
+
+## Single file per node
+
+### Inputs
+
+* Organization Name (This is used for default group)
+* Default User (This user is called)
+* Default User sudo privileges. (This user can do)
+* Default User keys (This user can touch)
+* Additional users (with those same expectations)
+* Groups. If this is *NOT* passed there is simply a single group created and everyone is added to it. If this *IS* passed then it's expected to be a map of string keys representing group names with lists of strings representing the nodes. This can be 'all', instead of listing all hostnames. This allows for large groups to be created.
+
+A single Cloud Init template is generated per host.
+
+Each potential section is independently tested and constructed, in order.
+
+If an input variable is passed, you get one thing. If it's not, you get another.
+
+* Usergroups: This section creates a default user and all passed users, in addition to creating any groups that were input beyond the default.
+
+## Testing
+
+```sh
+tofu -chdir=src apply
+```
 
 ### Terraform Patterns
 

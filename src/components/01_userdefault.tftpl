@@ -1,0 +1,20 @@
+# userdefault_section.tftpl
+users:
+  - default
+  - name: ${organization_name}-bot
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: ${organization_name}, admin
+    lock_passwd: true
+    shell: /bin/bash
+%{ for user in users ~}
+  - name:  ${user.username}
+%{ if user.sudo ~}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+%{ endif ~}
+    groups: ${groups}
+    lock_passwd: true
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${user.ssh_public_key}
+%{ endfor ~}
+

@@ -1,2 +1,4 @@
 keys
 cloud-init-files
+stupidfile
+src/.terraform.lock.hcl
